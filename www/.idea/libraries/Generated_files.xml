@@ -1,0 +1,39 @@
+<component name="libraryTable">
+  <library name="Generated files" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/js/view/transaction-view.js" />
+        <item url="file://$PROJECT_DIR$/js/collection/transaction-collection.js" />
+        <item url="file://$PROJECT_DIR$/js/view/app-view.js" />
+        <item url="file://$PROJECT_DIR$/js/view/contact-view.js" />
+        <item url="file://$PROJECT_DIR$/js/router/router.js" />
+        <item url="file://$PROJECT_DIR$/js/collection/contact-collection.js" />
+        <item url="file://$PROJECT_DIR$/js/model/transaction-model.js" />
+        <item url="file://$PROJECT_DIR$/js/model/contact-model.js" />
+        <item url="file://$PROJECT_DIR$/js/model/app-model.js" />
+        <item url="file://$PROJECT_DIR$/js/index.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/js/collection/personcollection.js" />
+      <root url="file://$PROJECT_DIR$/js/model/transactionmodel.js" />
+      <root url="file://$PROJECT_DIR$/js/model/personmodel.js" />
+      <root url="file://$PROJECT_DIR$/js/view/transactionview.js" />
+      <root url="file://$PROJECT_DIR$/js/view/appview.js" />
+      <root url="file://$PROJECT_DIR$/js/main.js" />
+      <root url="file://$PROJECT_DIR$/js/view/contacts-view.js" />
+      <root url="file://$PROJECT_DIR$/js/view/contacts-view.js" />
+      <root url="file://$PROJECT_DIR$/js/view/transaction-view.js" />
+      <root url="file://$PROJECT_DIR$/js/collection/transaction-collection.js" />
+      <root url="file://$PROJECT_DIR$/js/view/app-view.js" />
+      <root url="file://$PROJECT_DIR$/js/router/router.js" />
+      <root url="file://$PROJECT_DIR$/js/view/contact-view.js" />
+      <root url="file://$PROJECT_DIR$/js/collection/contact-collection.js" />
+      <root url="file://$PROJECT_DIR$/js/model/transaction-model.js" />
+      <root url="file://$PROJECT_DIR$/js/model/app-model.js" />
+      <root url="file://$PROJECT_DIR$/js/model/contact-model.js" />
+      <root url="file://$PROJECT_DIR$/js/index.js" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>

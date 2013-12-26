@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Hello World</title>
+    </head>
+    <body>
+        <!-- backbone will use this as its main container -->
+        <div id="app"></div>
+        <div id="fb-root"></div>
+
+        <script id="login-template" type="text/x-handlebars-template">
+          <div style="text-align:center; padding-top:15px">
+            <a class="btn-facebook"></a>
+          </riv>
+        </script>
+
+        <!-- templates for backbone views -->
+        <script id="app-template" type="text/x-handlebars-template">
+          <nav id="header" class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
+          <div class="row">
+            <div class="col-md-12">
+              <div id="list" class="list-group"></div>
+            </div>
+          </div>
+          <nav id="footer" class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+          </nav>
+        </script>
+
+        <script id="header-contacts-template" type="text/x-handlebars-template">
+            {{#unless showSearchField}}
+              <a class="navbar-brand">Cash With Friends</a>
+            {{else}}
+              <div class="search-position position-contacts">
+                <input type="search" class="search-input form-control" value="{{query}}" placeholder="Search" />
+                <a class="close-search muted glyphicon glyphicon-remove"></a>
+              </div>
+            {{/unless}}
+
+            <div class="pull-right">
+              {{#unless showSearchField}}
+                <button type="button" class="search-btn btn btn-default navbar-btn">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+              {{/unless}}
+              <button type="button" class="new-btn btn btn-default navbar-btn">
+                <span class="glyphicon glyphicon-send"></span>
+              </button>
+            </div>
+        </script>
+
+        <script id="header-transactions-template" type="text/x-handlebars-template">
+            <button type="button" class="back-btn btn btn-default navbar-btn pull-left">
+              <span id="search-btn" class="glyphicon glyphicon-chevron-left"></span>
+            </button>
+            <a class="navbar-brand" style="margin-left: 5px"><img src="http://graph.facebook.com/{{username}}/picture"/></a>
+            <a class="navbar-brand" style="position: absolute; top: 0px; left: 76px; width: 9999px">{{name}}</a>
+            <span class="muted" style="position: absolute; top: 28px; left: 76px; font-size: 11px; text-transform: uppercase">{{ows balance}}</span>
+            <span class="balance monospace pull-right">
+              <span class="{{color balance}}">{{sign balance}}{{currency}}</sapn>
+            </span>
+        </script>
+
+        <script id="header-addressbook-template" type="text/x-handlebars-template">
+            <button type="button" class="back-btn btn btn-default navbar-btn pull-left">
+              <span id="search-btn" class="glyphicon glyphicon-chevron-left"></span>
+            </button>
+            {{#unless showSearchField}}
+              <a class="navbar-brand" style="position: absolute; top: 0px; left: 38px;">Select contacts</a>
+              <span class="muted" style="position: absolute; top: 28px; left: 38px; font-size: 11px; text-transform: uppercase">{{numSelected}} selected</span>
+              <div class="pull-right">
+                <button type="button" class="search-btn btn btn-default navbar-btn">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+              </div>
+            {{else}}
+              <div class="search-position position-addressbook">
+                <input type="search" class="search-input form-control" value="{{query}}" placeholder="Search" />
+                <a class="close-search muted glyphicon glyphicon-remove"></a>
+              </div>
+            {{/unless}}
+        </script>
+
+        <script id="header-adjust-template" type="text/x-handlebars-template">
+            <button type="button" class="back-btn btn btn-default navbar-btn pull-left">
+              <span id="search-btn" class="glyphicon glyphicon-chevron-left"></span>
+            </button>
+            <a class="navbar-brand" style="position: absolute; top: 0px; left: 38px;">Splitting the bill</a>
+            <span class="muted" style="position: absolute; top: 28px; left: 38px; font-size: 11px; text-transform: uppercase">Among {{numSelected}} people</span>
+            <span class="balance monospace pull-right">
+              <span class="{{color adjustBalance}}">{{sign adjustBalance}}{{adjustCurrency}}</sapn>
+            </span>
+        </script>
+
+        <script id="footer-contacts-template" type="text/x-handlebars-template">
+            <span class="navbar-text" style="text-transform: uppercase; font-size: 11px; line-height: 10px; width: 150px">Overall balance:</span>
+            <span class="balance monospace pull-right">
+              <span class="{{color balance}}">{{sign balance}}{{currency}}</sapn>
+            </span>
+        </script>
+
+        <script id="footer-transactions-template" type="text/x-handlebars-template">
+          <div class="pull-right">
+            <button type="button" class="btn-send btn btn-primary navbar-btn">
+              <span class="glyphicon glyphicon-send"/> 
+            </button>
+            <button type="button" class="btn-next btn btn-default navbar-btn" style="display: none">
+              <span class="glyphicon glyphicon-arrow-right"/> 
+            </button>
+          </div>
+
+          <select id="promise-select" class="promise-select form-control" style="width: 90px; margin: 8px 0; display: inline-block;">
+            <option value="+">Request</option>
+            <option value="-">Promise</option>
+          </select>
+          <input id="balance-input" class="balance-input form-control" value="{{balance-input}}" type="number" value="0" min="0" step="0.01" style="width: 65px; margin: 8px 0; display: inline-block; padding-right: 0" />
+          <select id="currency-select" class="currency-select form-control" style="width: 50px; margin: 8px 0; display: inline-block;">
+            <option>€</option>
+            <option>$</option>
+          </select>
+          <input id="reason-input" class="reason-input form-control" type="text" style="margin-bottom: 10px" value="{{reason-input}}" placeholder="Reason" />
+        </script>
+
+        <script id="footer-adjust-template" type="text/x-handlebars-template">
+          <div class="pull-right">
+            <button type="button" class="btn-send btn btn-primary navbar-btn">
+              <span class="glyphicon glyphicon-send"/> 
+            </button>
+          </div>
+        </script>
+
+        <script id="contact-template" type="text/x-handlebars-template">
+          <img class="media-object pull-left" style="border-radius: 100%; width: 45px; height: 45px" src="http://graph.facebook.com/{{username}}/picture">
+          <div class="media-body">
+            <div class="text">
+              <h4 class="media-heading">{{name}}</h4>
+              <h4 class="media-heading monospace pull-right bg {{color balance}}">{{sign balance}}{{currency}}</h4>
+            </div>
+            <div class="text">
+              <span class="reason muted">
+                <span class="glyphicon {{glyphicon status}}"/>
+                {{reason}}
+              </span>
+              {{#if date}}
+                <time class="bg pull-right">
+                  <span class="muted">{{timeago date}}</span>
+                </time>
+              {{/if}}
+            </div>
+          </div>
+        </script>
+
+        <!-- composable templates? -->
+        <script id="adjustable-contact-template" type="text/x-handlebars-template">
+          <img class="media-object pull-left" style="border-radius: 100%; width: 45px; height: 45px" src="http://graph.facebook.com/{{username}}/picture">
+          <div class="media-body">
+            <div class="text">
+              <h4 class="media-heading">{{name}}</h4>
+            </div>
+            <span class="muted">
+              <span class="glyphicon {{lockedIcon}}"/>
+            </span>
+            <div class="bg" style="position:absolute; top:8px; right:8px;">
+              <input class="balance-input form-control pull-right" value="{{share}}" type="number" value="0" min="0" step="0.01" style="width: 65px; display: inline-block; padding-right: 0; margin: 0;" />
+            </div>
+          </div>
+        </script>
+
+        <script id="transaction-template" type="text/x-handlebars-template">
+          <h4 class="list-group-item-heading pull-right monospace"><span class="{{color balance}}">{{sign balance}}{{currency}}</span></h4>
+          <p class="list-group-item-text">{{reason}}</p>
+          <span class="muted" style="text-transform: uppercase; font-size: 11px">
+            <span class="glyphicon {{glyphicon status}}"/> 
+            <time>{{timeago date}}</time>
+          </span>
+          {{#if isPending}}
+            <div class="btn-toolbar">
+              <button type="button" class="decline-btn btn btn-default">
+                <span class="glyphicon glyphicon-remove"></span>
+                Decline
+              </button>
+              <button type="button" class="accept-btn btn btn-default">
+                <span class="glyphicon glyphicon-ok"></span>
+                Accept
+              </button>
+            </div>
+          {{/if}}
+        </script>
+
+        <script type="text/javascript" src="cordova.js"></script>
+
+        <!-- adding all the dependencies manually -->
+        <script type="text/javascript" src="js/vendor/jquery.js"></script>
+        <script type="text/javascript" src="js/vendor/bootstrap.js"></script>
+        <script type="text/javascript" src="js/vendor/underscore.js"></script>
+        <script type="text/javascript" src="js/vendor/backbone.js"></script>
+        <script type="text/javascript" src="js/vendor/handlebars.js"></script>
+        <script type="text/javascript" src="js/vendor/moment-with-langs.js"></script>
+        <script type="text/javascript">
+          (function(d){
+            var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement('script'); js.id = id; js.async = true;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            ref.parentNode.insertBefore(js, ref);
+          }(document));
+        </script>
+
+        <!-- HACK: declaring the "namespace" here -->
+        <script type="text/javascript">
+          var app = {
+            location: "http://localhost:9000"
+          }; 
+        </script>
+
+        <!-- Make Backbone use CORS -->
+        <script type="text/javascript">
+          (function() {
+            var proxiedAjax = Backbone.ajax;
+            Backbone.ajax = function(request) {
+              request.crossDomain = true;
+              request.xhrFields = { withCredentials: true };
+              return proxiedAjax(request);
+            };
+          })();
+        </script>
+
+        <!-- add the mvc stuff -->
+        <script type="text/javascript" src="js/model/contact-model.js"></script>
+        <script type="text/javascript" src="js/collection/contact-collection.js"></script>
+        <script type="text/javascript" src="js/view/contact-view.js"></script>
+        <script type="text/javascript" src="js/view/selectable-contact-view.js"></script>
+        <script type="text/javascript" src="js/view/adjustable-contact-view.js"></script>
+        <script type="text/javascript" src="js/view/login-view.js"></script>
+
+        <script type="text/javascript" src="js/view/header-view.js"></script>
+        <script type="text/javascript" src="js/view/footer-view.js"></script>
+
+        <script type="text/javascript" src="js/model/transaction-model.js"></script>
+        <script type="text/javascript" src="js/collection/transaction-collection.js"></script>
+        <script type="text/javascript" src="js/view/transaction-view.js"></script>
+
+        <script type="text/javascript" src="js/model/app-model.js"></script>
+        <script type="text/javascript" src="js/view/app-view.js"></script>
+
+        <script type="text/javascript" src="js/router/router.js"></script>
+
+        <!-- start the app -->
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
+    </body>
+</html>
