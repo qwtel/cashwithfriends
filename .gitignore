@@ -3,3 +3,4 @@ platforms/
 plugins/
 merges/
 .cordova/
+.idea/
