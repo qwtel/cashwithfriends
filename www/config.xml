@@ -11,4 +11,9 @@
     <access origin="*" />
     <preference name="fullscreen" value="false" />
     <preference name="webviewbounce" value="true" />
+
+    <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.4.0">
+      <param name="APP_ID" value="254645454692956" />
+      <param name="APP_NAME" value="cashwithfriends" />
+    </gap:plugin>
 </widget>
