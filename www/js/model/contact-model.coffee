@@ -1,12 +1,8 @@
 class app.ContactModel extends Backbone.Model
   defaults:
-    id: ""
-    name: ""
-    username: ""
-    balance: ""
+    phoneNumbers: []
+    balance: 0
     currency: ""
-    reason: ""
+    lastReason: ""
+    lastStatus: ""
     date: null
-
-  initialize: ->
-    @set "link", "/#/contacts/#{@id}"

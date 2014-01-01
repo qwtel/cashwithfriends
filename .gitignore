@@ -4,3 +4,4 @@ plugins/
 merges/
 .cordova/
 .idea/
+npm-debug.log

@@ -13,13 +13,27 @@ class app.AppModel extends Backbone.Model
     "promise-select": "+"
     "reason-input": ""
 
-  urlRoot: app.location + "/login"
+  urlRoot: app.location + "/contacts"
 
   initialize: -> 
     @listenTo this, "change:page", @updateCollections
-    @fetch(reset: true)
+
     app.selected = new app.ContactCollection
     app.selected.comparator = "name"
+
+    number = localStorage.getItem("number")
+    password = localStorage.getItem("password")
+    if number and password
+      @credentials = 
+        username: number
+        password: password
+      app.contacts.credentials = @credentials
+      app.transactions.credentials = @credentials
+
+      @set "id", number
+      @fetch reset: true
+    else
+      @set "page", "login"
 
   resetInput: ->
     @set

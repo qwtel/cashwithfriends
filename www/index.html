@@ -22,7 +22,7 @@
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1" />
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <title>Hello World</title>
@@ -30,12 +30,26 @@
     <body>
         <!-- backbone will use this as its main container -->
         <div id="app"></div>
-        <div id="fb-root"></div>
 
         <script id="login-template" type="text/x-handlebars-template">
-          <div style="text-align:center; padding-top:15px">
-            <a class="btn-facebook"></a>
-          </riv>
+          <!--<div class="modal fade">-->
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Can I have your number?</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <input type="tel" class="form-control" id="phone-number" placeholder="+43 664 1234567" value="+43 664 1234567">
+                  </div>
+                  <p class="alert alert-info"><strong>Please note:</strong> <em>Cash With Friends</em> can only work it's magic if you provide your real phone number.</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary">Login</button>
+                </div>
+              </div>
+            </div>
+          <!--</div>-->
         </script>
 
         <!-- templates for backbone views -->
@@ -89,8 +103,8 @@
               <span id="search-btn" class="glyphicon glyphicon-chevron-left"></span>
             </button>
             {{#unless showSearchField}}
-              <a class="navbar-brand" style="position: absolute; top: 0px; left: 38px;">Select contacts</a>
-              <span class="muted" style="position: absolute; top: 28px; left: 38px; font-size: 11px; text-transform: uppercase">{{numSelected}} selected</span>
+              <a class="navbar-brand" style="position: absolute; top: 0px; left: 54px;">Select contacts</a>
+              <span class="muted" style="position: absolute; top: 28px; left: 54px; font-size: 11px; text-transform: uppercase">{{numSelected}} selected</span>
               <div class="pull-right">
                 <button type="button" class="search-btn btn btn-default navbar-btn">
                   <span class="glyphicon glyphicon-search"></span>
@@ -108,8 +122,8 @@
             <button type="button" class="back-btn btn btn-default navbar-btn pull-left">
               <span id="search-btn" class="glyphicon glyphicon-chevron-left"></span>
             </button>
-            <a class="navbar-brand" style="position: absolute; top: 0px; left: 38px;">Splitting the bill</a>
-            <span class="muted" style="position: absolute; top: 28px; left: 38px; font-size: 11px; text-transform: uppercase">Among {{numSelected}} people</span>
+            <a class="navbar-brand" style="position: absolute; top: 0px; left: 54px;">Splitting the bill</a>
+            <span class="muted" style="position: absolute; top: 28px; left: 54px; font-size: 11px; text-transform: uppercase">Among {{numSelected}} people</span>
             <span class="balance monospace pull-right">
               <span class="{{color adjustBalance}}">{{sign adjustBalance}}{{adjustCurrency}}</sapn>
             </span>
@@ -217,17 +231,11 @@
         <script type="text/javascript" src="js/vendor/bootstrap.js"></script>
         <script type="text/javascript" src="js/vendor/underscore.js"></script>
         <script type="text/javascript" src="js/vendor/backbone.js"></script>
+        <script type="text/javascript" src="js/vendor/backbone.basicauth.js"></script>
         <script type="text/javascript" src="js/vendor/handlebars.js"></script>
         <script type="text/javascript" src="js/vendor/moment-with-langs.js"></script>
-        <script type="text/javascript">
-          (function(d){
-            var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-            if (d.getElementById(id)) {return;}
-            js = d.createElement('script'); js.id = id; js.async = true;
-            js.src = "//connect.facebook.net/en_US/all.js";
-            ref.parentNode.insertBefore(js, ref);
-          }(document));
-        </script>
+        <script type="text/javascript" src="js/vendor/phone-format.js"></script>
+        <script type="text/javascript" src="js/vendor/sha256.js"></script>
 
         <!-- HACK: declaring the "namespace" here -->
         <script type="text/javascript">

@@ -47,30 +47,18 @@ Handlebars.registerHelper "glyphicon", (status) ->
     when "pending" then "glyphicon-time"
     when "rejected" then "glyphicon-remove"
     when "inflight" then "glyphicon-send"
-    when "generated" then "glyphicon-info-sign"
+    when "generated" then "glyphicon-repeat"
 
 _.extend app,
   initialize: -> 
     @bindEvents()
 
   bindEvents: ->
-    document.addEventListener('deviceready', this.onDeviceReady, false);
+    document.addEventListener('deviceready', @onDeviceReady, false)
 
-    # TODO: Move this to onDeviceReady in production!
-    app.view = new app.AppView();
+    unless window.device
+      app.view = new app.AppView
 
-    window.fbAsyncInit = =>
-      FB.init
-        appId      : '254645454692956'
-        status     : true  # check login status
-        cookie     : true  # enable cookies to allow the server to access the session
-        xfbml      : true  # parse XFBML
-
-      FB.Event.subscribe 'auth.authResponseChange', (response) =>
-        if response.status is 'connected'
-          app.model.set "page", "contacts"
-          #app.model.set "page", "login"
-        else
-          app.model.set "page", "login"
-
-  onDeviceReady: -> 
+  onDeviceReady: ->
+    if window.device
+      app.view = new app.AppView
