@@ -23,17 +23,18 @@ class app.AppModel extends Backbone.Model
 
     number = localStorage.getItem("number")
     password = localStorage.getItem("password")
-    if number and password
+    registered = localStorage.getItem("registered")
+
+    if registered and number and password
       @credentials = 
         username: number
         password: password
       app.contacts.credentials = @credentials
       app.transactions.credentials = @credentials
 
-      @set "id", number
+      # XXX
+      @set id: number
       @fetch reset: true
-    else
-      @set "page", "login"
 
   resetInput: ->
     @set

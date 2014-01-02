@@ -1,45 +1,61 @@
 class app.LoginView extends Backbone.View
-  tagName: "div"
-  className: "modal fade"
-  template: Handlebars.compile($("#login-template").html())
+  template1: Handlebars.compile($("#login-template").html())
+  template2: Handlebars.compile($("#load-contacts-template").html())
 
   events: 
-    "click .btn-primary": "login"
+    "click #btn-register": "register"
+    "click #btn-okay": "load"
 
   initialize: ->
     @render()
 
   render: ->
-    @$el.html(@template(@model.toJSON())).modal backdrop: "static"
+    if not localStorage.getItem("registered")
+      @render1()
+    else if not localStorage.getItem("contactsLoaded")
+      @render2()
 
-  login: ->
+  render1: ->
+    @$el.html(@template1(@model.toJSON())).find(".modal").modal(backdrop: "static")
+
+  render2: ->
+    @$el.html(@template2(@model.toJSON())).find(".modal").modal(backdrop: "static")
+
+  register: ->
     number = @$("#phone-number").val()
     if isValidNumber(number)
-      $(".modal-backdrop").remove()
-
+      #1
       number = formatE164("US", number).substring(1)
       password = Math.random().toString(36).substring(2)
 
-      localStorage.setItem("number", number)
-      localStorage.setItem("password", password)
-
+      # 3
+      # set all credentials
       @model.credentials = 
         username: number
         password: password
       app.contacts.credentials = @model.credentials
       app.transactions.credentials = @model.credentials
 
-      @readContacts()
+      #5
+      me = new app.ContactModel
+      me.credentials = @model.credentials
+      me.save id: number,
+        success: =>
+          #1
+          console.log("registered")
+          localStorage.setItem("number", number)
+          localStorage.setItem("password", password)
+          localStorage.setItem("registered", true)
 
-      ###
-      @model.set 
-        id: number
-        page: "contacts"
+          @render2()
 
-      @model.fetch reset: true
-      ###
+        error: (err) => 
+          # TODO
+          console.log(err)
     else
       @$("#phone-number").parents(".form-group").addClass("has-error")
+
+  load: -> @readContacts()
 
   contactSuccess: (contacts) ->
     phonebook = new app.ContactCollection
@@ -73,10 +89,16 @@ class app.LoginView extends Backbone.View
 
     if phonebook.length > 0
       Backbone.sync 'create', phonebook,
-        success: (model, resp, xhr) ->
+        success: (model, resp, xhr) =>
           # TODO: Store contacts in localStorage
           console.log model
-          localStorage.setItem("loginSuccessful", true)
+          localStorage.setItem("contactsLoaded", true)
+
+          #2
+          $(".modal-backdrop").remove()
+
+          #3
+          @model.set page: "contacts"
 
   contactError: (err) ->
     # TODO

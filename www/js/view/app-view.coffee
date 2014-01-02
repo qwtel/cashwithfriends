@@ -13,10 +13,6 @@ class app.AppView extends Backbone.View
     @listenTo app.transactions, 'reset', @renderTransactions
     @listenTo app.transactions, 'add', @addTransaction
 
-    loginSuccessful = localStorage.getItem("loginSuccessful")
-    if not loginSuccessful then @model.set "page", "login"
-    else @model.set "page", "contacts"
-
     @render()
 
   render: ->
@@ -26,15 +22,16 @@ class app.AppView extends Backbone.View
     new app.HeaderView(model: @model, el: "#header")
     new app.FooterView(model: @model, el: "#footer")
 
+    if !localStorage.getItem("registered") or !localStorage.getItem("contactsLoaded")
+      @model.set page: "login"
+    else
+      @model.set page: "contacts"
+
     @changePage()
 
   contactsReceived: ->
-    if app.contacts.length > 0
-      contacts = @filterContacts app.contacts
-      @renderContacts contacts
-    else if @model.get("page") is "addressbook"
-      # TODO: notify user!?
-      @readContacts()
+    contacts = @filterContacts app.contacts
+    @renderContacts contacts
 
   renderContacts: (contacts) ->
     @$("#list").empty()
@@ -48,7 +45,8 @@ class app.AppView extends Backbone.View
   filterContacts: (contacts) ->
     query = @model.get("query")
     contacts.filter (contact) ->
-      contact.get("name").toLowerCase().search(query.toLowerCase()) >= 0
+      true
+      #contact.get("name").toLowerCase().search(query.toLowerCase()) >= 0
 
   renderTransactions: ->
     app.transactions.each @addTransaction, this

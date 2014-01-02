@@ -32,27 +32,47 @@
         <div id="app"></div>
 
         <script id="login-template" type="text/x-handlebars-template">
-          <!--<div class="modal fade">-->
+          <div class="modal fade">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
                   <h4 class="modal-title">Can I have your number?</h4>
                 </div>
                 <div class="modal-body">
+                  <p>Hi, <em>Cash With Friends</em> needs your phone number so it can identify you within its social network.</p>
                   <div class="form-group">
+                    <label>Your phone number:</label>
                     <input type="tel" class="form-control" id="phone-number" placeholder="+43 664 1234567" value="+43 664 1234567">
+                    <p class="help-block"><strong>Please note:</strong> <em>Cash With Friends</em> can only work it's magic when you provide your real phone number.</p>
                   </div>
-                  <p class="alert alert-info"><strong>Please note:</strong> <em>Cash With Friends</em> can only work it's magic if you provide your real phone number.</p>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary">Login</button>
+                  <button id="btn-register" type="button" class="btn btn-primary">Register</button>
                 </div>
               </div>
             </div>
-          <!--</div>-->
+          </div>
         </script>
 
-        <!-- templates for backbone views -->
+        <script id="load-contacts-template" type="text/x-handlebars-template">
+          <div class="modal fade">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Can I have your contacts?</h4>
+                </div>
+                <div class="modal-body">
+                  <p><em>Cash With Friends</em> wants to access your contacts to extend its debt graph. This is basically the same thing that WhatsApp does.</p>
+                  <p>However, <em>Cash With Friends</em> will not store any personal data on its server.</p>
+                </div>
+                <div class="modal-footer">
+                  <button id="btn-okay" type="button" class="btn btn-primary">Okay</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </script>
+
         <script id="app-template" type="text/x-handlebars-template">
           <nav id="header" class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
           <div class="row">
@@ -66,7 +86,8 @@
 
         <script id="header-contacts-template" type="text/x-handlebars-template">
             {{#unless showSearchField}}
-              <a class="navbar-brand">Cash With Friends</a>
+              <a class="navbar-brand">Cash</a>
+              <span class="muted" style="text-transform: uppercase; font-size: 11px; position:absolute; left:10px; top:28px">With Friends</span>
             {{else}}
               <div class="search-position position-contacts">
                 <input type="search" class="search-input form-control" value="{{query}}" placeholder="Search" />
@@ -80,7 +101,7 @@
                   <span class="glyphicon glyphicon-search"></span>
                 </button>
               {{/unless}}
-              <button type="button" class="new-btn btn btn-default navbar-btn">
+              <button type="button" class="new-btn btn btn-primary navbar-btn">
                 <span class="glyphicon glyphicon-send"></span>
               </button>
             </div>
@@ -91,8 +112,8 @@
               <span id="search-btn" class="glyphicon glyphicon-chevron-left"></span>
             </button>
             <a class="navbar-brand" style="margin-left: 5px"><img src="http://graph.facebook.com/{{username}}/picture"/></a>
-            <a class="navbar-brand" style="position: absolute; top: 0px; left: 76px; width: 9999px">{{name}}</a>
-            <span class="muted" style="position: absolute; top: 28px; left: 76px; font-size: 11px; text-transform: uppercase">{{ows balance}}</span>
+            <a class="navbar-brand" style="position: absolute; top: 0px; left: 94px; width: 9999px">{{name}}</a>
+            <span class="muted" style="position: absolute; top: 28px; left: 94px; font-size: 11px; text-transform: uppercase">{{ows balance}}</span>
             <span class="balance monospace pull-right">
               <span class="{{color balance}}">{{sign balance}}{{currency}}</sapn>
             </span>
@@ -103,8 +124,8 @@
               <span id="search-btn" class="glyphicon glyphicon-chevron-left"></span>
             </button>
             {{#unless showSearchField}}
-              <a class="navbar-brand" style="position: absolute; top: 0px; left: 54px;">Select contacts</a>
-              <span class="muted" style="position: absolute; top: 28px; left: 54px; font-size: 11px; text-transform: uppercase">{{numSelected}} selected</span>
+              <a class="navbar-brand" style="position:absolute; top:0px; left:54px;">Select contacts</a>
+              <span class="muted" style="position:absolute; top:28px; left:54px; font-size:11px; text-transform:uppercase">{{numSelected}} selected</span>
               <div class="pull-right">
                 <button type="button" class="search-btn btn btn-default navbar-btn">
                   <span class="glyphicon glyphicon-search"></span>
@@ -142,7 +163,7 @@
               <span class="glyphicon glyphicon-send"/> 
             </button>
             <button type="button" class="btn-next btn btn-default navbar-btn" style="display: none">
-              <span class="glyphicon glyphicon-arrow-right"/> 
+              <span class="glyphicon glyphicon-chevron-right"/> 
             </button>
           </div>
 
