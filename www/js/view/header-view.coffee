@@ -57,7 +57,7 @@ class app.HeaderView extends Backbone.View
       @model.set("page", "addressbook")
     else
       @model.set("page", "contacts")
-      app.selected.reset()
+      @model.get("selected").reset()
 
     if page is "transactions" or page is "addressbook"
       @model.resetInput()
@@ -75,7 +75,7 @@ class app.HeaderView extends Backbone.View
 
   toJSON: ->
     res = @model.toJSON()
-    res.numSelected = app.selected.length
+    res.numSelected = res.selected.length
     res.adjustBalance = parseFloat(res["promise-select"] + res["balance-input"])
-    res.adjustCurrency = @model.get("currency-select")
+    res.adjustCurrency = res["currency-select"]
     res

@@ -7,10 +7,10 @@ class app.AppView extends Backbone.View
 
   initialize: ->
     @listenTo @model, 'reset', @render
-    @listenTo @model, 'change:page', @changePage
-    @listenTo @model, 'change:query', @renderContacts
-    @listenTo app.contacts, 'reset', @contactsReceived
-    @listenTo app.transactions, 'reset', @renderTransactions
+    @listenTo @model, 'change:page', @renderPage
+    @listenTo @model, 'change:query', @renderPage
+    #@listenTo app.contacts, 'reset', @contactsReceived
+    #@listenTo app.transactions, 'reset', @renderTransactions
     @listenTo app.transactions, 'add', @addTransaction
 
     @render()
@@ -27,29 +27,10 @@ class app.AppView extends Backbone.View
     else
       @model.set page: "contacts"
 
-    @changePage()
+    @renderPage()
 
-  contactsReceived: ->
-    contacts = @filterContacts app.contacts
-    @renderContacts contacts
-
-  renderContacts: (contacts) ->
-    @$("#list").empty()
-
-    switch @model.get("page")
-      when "contacts"
-        _.each contacts, @addContact, this
-      when "addressbook"
-        _.each contacts, (model) => @add(app.SelectableContactView)(model)
-
-  filterContacts: (contacts) ->
-    query = @model.get("query")
-    contacts.filter (contact) ->
-      true
-      #contact.get("name").toLowerCase().search(query.toLowerCase()) >= 0
-
-  renderTransactions: ->
-    app.transactions.each @addTransaction, this
+  renderTransactions: (transactions) ->
+    transactions.each @addTransaction, this
     $(document).scrollTop($(document).height())
 
   add: (View, model) ->
@@ -63,13 +44,30 @@ class app.AppView extends Backbone.View
     if @model.get("page") is "transactions"
       @add(app.TransactionView)(model)
 
-  changePage: ->
+  renderPage: ->
+    console.log("change page")
     @$("#list").empty()
 
     switch @model.get("page")
       when "login"
         view = new app.LoginView(model: @model)
         @$("#list").html(view.el)
+      when "contacts"
+        contacts = @filterContacts @model.get("contacts")
+        _.each contacts, @addContact, this
+      when "addressbook"
+        contacts = @filterContacts @model.get("contacts")
+        _.each contacts, (model) => @add(app.SelectableContactView)(model)
       when "adjust"
-        _.each app.selected.models, (model) => @add(app.AdjustableContactView)(model)
+        @model.get("selected").each (model) => @add(app.AdjustableContactView)(model)
 
+  filterContacts: (contacts) ->
+    console.log("filter contacts", contacts)
+
+    page = @model.get("page")
+    query = @model.get("query")
+    contacts.filter (contact) =>
+      filter = true
+      #contact.get("nickname").toLowerCase().search(query.toLowerCase()) >= 0
+      if page is "contacts" then filter = filter and contact.get("transactions").length > 0
+      filter

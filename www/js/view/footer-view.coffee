@@ -59,6 +59,8 @@ class app.FooterView extends Backbone.View
       else if share < 0 then "-"
       else ""
 
+    selected = @model.get("selected")
+
     switch @model.get("page")
       when "transactions"
         transaction = @createTransaction(app.entity.id, sign, balance, currency, reason)
@@ -67,20 +69,20 @@ class app.FooterView extends Backbone.View
         @clear()
 
       when "addressbook"
-        app.entity = app.selected.at(0)
-        app.selected.reset()
+        app.entity = selected.at(0)
+        selected.reset()
         transaction = @createTransaction(app.entity.id, sign, balance, currency, reason)
         @updateBalance(app.entity, transaction)
         @model.set("page", "transactions")
 
       when "adjust"
-        for contact in app.selected.models
+        for contact in selected.models
           share = contact.get("share")
           sign = getSign(share)
           transaction = @createTransaction(contact.id, sign, share, currency, reason)
           @updateBalance(contact, transaction)
 
-        app.selected.reset()
+        selected.reset()
         @model.set("page", "contacts")
 
   updateBalance: (model, transaction) ->

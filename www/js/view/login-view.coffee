@@ -33,13 +33,16 @@ class app.LoginView extends Backbone.View
       @model.credentials = 
         username: number
         password: password
-      app.contacts.credentials = @model.credentials
+      @model.get("contacts").credentials = @model.credentials
       app.transactions.credentials = @model.credentials
 
       #5
-      me = new app.ContactModel
+      me = @model.get("me")
       me.credentials = @model.credentials
-      me.save id: number,
+      me.save 
+        id: number
+        phoneNumbers: [number]
+      ,
         success: =>
           #1
           console.log("registered")
@@ -47,6 +50,7 @@ class app.LoginView extends Backbone.View
           localStorage.setItem("password", password)
           localStorage.setItem("registered", true)
 
+          $(".modal-backdrop").remove()
           @render2()
 
         error: (err) => 
@@ -58,9 +62,6 @@ class app.LoginView extends Backbone.View
   load: -> @readContacts()
 
   contactSuccess: (contacts) ->
-    phonebook = new app.ContactCollection
-    phonebook.credentials = @model.credentials
-
     for contact in contacts 
       if contact.phoneNumbers
         validNumbers = []
@@ -72,13 +73,18 @@ class app.LoginView extends Backbone.View
           if isValidNumber(phoneNumber.value, dialingCountry)
             validNumber = formatE164(dialingCountry, phoneNumber.value).substring(1)
             validNumbers.push(validNumber)
-            console.log validNumber
+            console.log "valid number: " + validNumber
           else
             console.log "invalid number: " + phoneNumber.value
 
         if validNumbers.length > 0
-          phonebook.add(new app.ContactModel(phoneNumbers: validNumbers))
+          @model.get("contacts").add(new app.ContactModel(
+            phoneNumbers: validNumbers
+            displayName: contact.displayName
+            nickname: contact.nickname
+          ))
 
+          ###
           localContactData = 
             displayName: contact.displayName
             nickname: contact.nickname
@@ -86,9 +92,10 @@ class app.LoginView extends Backbone.View
           for number in validNumbers
             key = CryptoJS.SHA256(number)
             localStorage.setItem(key, JSON.stringify(localContactData))
+          ###
 
-    if phonebook.length > 0
-      Backbone.sync 'create', phonebook,
+    if @model.get("contacts").length > 0
+      Backbone.sync 'create', @model.get("contacts"),
         success: (model, resp, xhr) =>
           # TODO: Store contacts in localStorage
           console.log model
@@ -128,4 +135,4 @@ class app.LoginView extends Backbone.View
             phoneNumbers: [{value: "+436643406701"}]
           }
         ])
-      , 3000
+      , 1000

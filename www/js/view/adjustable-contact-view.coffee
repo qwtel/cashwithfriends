@@ -7,9 +7,14 @@ class app.AdjustableContactView extends app.ContactView
 
   initialize: ->
     @listenTo @model, "change:locked", @renderLock
+
+    total = app.model.get("balance-input")
+    splitAmong = app.model.get("selected").length 
+
     @model.set
-      share: app.model.get("balance-input") / app.selected.length
+      share: total / splitAmong
       locked: false
+
     super
 
   click: -> undefined
@@ -21,8 +26,9 @@ class app.AdjustableContactView extends app.ContactView
       locked: true
       share: parseFloat($(e.currentTarget).val())
 
+    selected = app.model.get("selected")
     balance = app.model.get("balance-input")
-    locked = app.selected.groupBy (contact) -> contact.get("locked")
+    locked = selected.groupBy (contact) -> contact.get("locked")
 
     remaining = _.reduce locked.true, (sum, contact) -> 
       sum - contact.get("share")
@@ -32,7 +38,7 @@ class app.AdjustableContactView extends app.ContactView
     if locked.false?
       _.each locked.false, (contact) -> contact.set("share", remaining / locked.false.length)
 
-    sum = app.selected.reduce (sum, contact) -> 
+    sum = selected.reduce (sum, contact) -> 
       sum + contact.get("share")
     , 
       0

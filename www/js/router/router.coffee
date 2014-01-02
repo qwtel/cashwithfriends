@@ -10,5 +10,5 @@ class Router extends Backbone.Router
   home: -> 
     @setPage "login"
 
-app.router = new Router();
-Backbone.history.start()
+    #app.router = new Router();
+    #Backbone.history.start()
