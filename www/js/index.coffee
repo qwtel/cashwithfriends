@@ -57,8 +57,10 @@ _.extend app,
     document.addEventListener('deviceready', @onDeviceReady, false)
 
     unless window.device
-      app.view = new app.AppView
+      null
+      #app.view = new app.AppView
 
   onDeviceReady: ->
     if window.device
-      app.view = new app.AppView
+      null
+      #app.view = new app.AppView

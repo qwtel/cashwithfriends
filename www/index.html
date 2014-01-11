@@ -24,12 +24,129 @@
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1" />
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
+        <link rel="stylesheet" type="text/css" href="css/app.css" />
+        <title>Cash With Friends</title>
     </head>
     <body>
         <!-- backbone will use this as its main container -->
-        <div id="app"></div>
+        <div id="app">
+          <div id="page-left" class="page page-middle">
+            <nav class="navbar navbar-default navbar-fixed-top">
+              <span class="list-group-item bege">
+                <div class="media">
+                  <input id="search" type="serach" placeholder="Search"/>
+                </div>
+                <span class="value">+100</span>
+              </span>
+            </nav>
+            <div class="list-group contacts">
+              <a class="list-group-item red">
+                <div class="media">
+                  <img class="media-object pull-left" src="http://graph.facebook.com/cell303/picture">
+                  <div class="media-body">
+                    <h4 class="media-heading">Florian Klampfer</h4>
+                  </div>
+                </div>
+                <span class="value">-10</span>
+              </a>
+              <a class="list-group-item red">
+                <div class="media">
+                  <img class="media-object pull-left" src="http://graph.facebook.com/cell303/picture">
+                  <div class="media-body">
+                    <h4 class="media-heading">Florian Klampfer</h4>
+                  </div>
+                </div>
+                <span class="value">-10</span>
+              </a>
+              <a class="list-group-item green">
+                <div class="media">
+                  <img class="media-object pull-left" src="http://graph.facebook.com/cell303/picture">
+                  <div class="media-body">
+                    <h4 class="media-heading">Florian Klampfer</h4>
+                  </div>
+                </div>
+                <span class="value">+10</span>
+              </a>
+            </div>
+          </div>
+          <div id="page-right" class="page page-left">
+            <nav class="navbar navbar-default navbar-fixed-top">
+              <span class="list-group-item bege">
+                <div class="media">
+                  <img class="media-object pull-left" src="http://graph.facebook.com/cell303/picture">
+                  <div class="media-body">
+                    <h4 class="media-heading">Florian Klampfer</h4>
+                  </div>
+                </div>
+                <span class="value">+10</span>
+              </span>
+            </nav>
+            <div id="transactions" class="list-group">
+              <span class="list-group-item arrow red">
+                <div class="media">
+                  <div class="media-body">
+                    <time class="pull-right">21/11/13</time>
+                    <h4 class="media-heading">+10</h4>
+                    <p class="media-text"><span class="glyphicon glyphicon-ok"></span> Pizza</p>
+                  </div>
+                </div>
+              </span>
+              <span class="list-group-item arrow green">
+                <div class="media">
+                  <div class="media-body">
+                    <time class="pull-right">21/11/13</time>
+                    <h4 class="media-heading">+10</h4>
+                    <p class="media-text"><span class="glyphicon glyphicon-ok"></span> Pizza</p>
+                  </div>
+                </div>
+              </span>
+              <span class="list-group-item arrow green">
+              </span>
+              <span class="list-group-item arrow green">
+              </span>
+              <span class="list-group-item arrow red">
+              </span>
+              <span class="list-group-item arrow green">
+              </span>
+              <span class="list-group-item arrow green">
+              </span>
+              <span class="list-group-item arrow red">
+              </span>
+            </div>
+            <nav class="navbar navbar-default navbar-fixed-bottom">
+              <a class="list-group-item stuff bege">
+                <span class="glyphicon glyphicon-plus"></span>
+              </a>
+            </nav>
+          </div>
+
+          <!--<div id="page-left" class="page page-right">
+            <nav class="navbar navbar-default navbar-fixed-top">
+              <span class="list-group-item">
+                <div class="media">
+                  <img class="media-object pull-left" src="http://graph.facebook.com/jerofejew/picture">
+                  <div class="media-body">
+                    <h4 class="media-heading">Julian Jerofejew</h4>
+                  </div>
+                </div>
+                <span class="value">0</span>
+              </span>
+            </nav>
+            <div class="list-group">
+              <div class="arrow-big red">
+                <div class="arrow-big-content">
+                  <button class="btn btn-default"><span class="glyphicon glyphicon-sort"></span></button>
+                  <div>
+                    <input class="input-value arrow-input" type="number" min="0" placeholder="€" />
+                  </div>
+                  <div>
+                    <input type="text" class="input-reason arrow-input" placeholder="Reason"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>-->
+        </div>
 
         <script id="login-template" type="text/x-handlebars-template">
           <div class="modal fade">
@@ -77,7 +194,11 @@
           <nav id="header" class="navbar navbar-default navbar-fixed-top" role="navigation"></nav>
           <div class="row">
             <div class="col-md-12">
-              <div id="list" class="list-group"></div>
+              <div id="list" class="list-group">
+                {{#each contacts}}
+                  {{> contact}}
+                {{/each}}
+              </div>
             </div>
           </div>
           <nav id="footer" class="navbar navbar-default navbar-fixed-bottom" role="navigation">
@@ -153,7 +274,7 @@
         <script id="footer-contacts-template" type="text/x-handlebars-template">
             <span class="navbar-text" style="text-transform: uppercase; font-size: 11px; line-height: 10px; width: 150px">Overall balance:</span>
             <span class="balance monospace pull-right">
-              <span class="{{color me.balance}}">{{sign me.balance}}{{me.currency}}</sapn>
+              <span class="{{color balance}}">{{sign balance}}{{currency}}</sapn>
             </span>
         </script>
 

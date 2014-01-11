@@ -3,8 +3,8 @@ class app.LoginView extends Backbone.View
   template2: Handlebars.compile($("#load-contacts-template").html())
 
   events: 
-    "click #btn-register": "register"
-    "click #btn-okay": "load"
+    "click #btn-register": "btnRegisterClicked"
+    "click #btn-okay": "btnOkayClicked"
 
   initialize: ->
     @render()
@@ -21,7 +21,7 @@ class app.LoginView extends Backbone.View
   render2: ->
     @$el.html(@template2(@model.toJSON())).find(".modal").modal(backdrop: "static")
 
-  register: ->
+  btnRegisterClicked: ->
     number = @$("#phone-number").val()
     if isValidNumber(number)
       #1
@@ -33,18 +33,20 @@ class app.LoginView extends Backbone.View
       @model.credentials = 
         username: number
         password: password
-      @model.get("contacts").credentials = @model.credentials
-      app.transactions.credentials = @model.credentials
+      #@model.get("contacts").credentials = @model.credentials
+      #app.transactions.credentials = @model.credentials
 
       #5
-      me = @model.get("me")
-      me.credentials = @model.credentials
-      me.save 
+      #me = @model.get("me")
+      #me.set 
+      #  id: number
+      #  phoneNumbers: [number]
+      
+      @model.save
         id: number
         phoneNumbers: [number]
       ,
         success: =>
-          #1
           console.log("registered")
           localStorage.setItem("number", number)
           localStorage.setItem("password", password)
@@ -59,9 +61,12 @@ class app.LoginView extends Backbone.View
     else
       @$("#phone-number").parents(".form-group").addClass("has-error")
 
-  load: -> @readContacts()
+  btnOkayClicked: -> @readContacts()
 
   contactSuccess: (contacts) ->
+    i = 0
+    ii = 0
+
     for contact in contacts 
       if contact.phoneNumbers
         validNumbers = []
@@ -78,34 +83,27 @@ class app.LoginView extends Backbone.View
             console.log "invalid number: " + phoneNumber.value
 
         if validNumbers.length > 0
-          @model.get("contacts").add(new app.ContactModel(
+          ii++
+
+          model = new app.ContactModel
+          model.save(
             phoneNumbers: validNumbers
             displayName: contact.displayName
             nickname: contact.nickname
-          ))
+          ,
+            success: (model) =>
+              @model.get("contacts").push(model.id)
 
-          ###
-          localContactData = 
-            displayName: contact.displayName
-            nickname: contact.nickname
-
-          for number in validNumbers
-            key = CryptoJS.SHA256(number)
-            localStorage.setItem(key, JSON.stringify(localContactData))
-          ###
-
-    if @model.get("contacts").length > 0
-      Backbone.sync 'create', @model.get("contacts"),
-        success: (model, resp, xhr) =>
-          # TODO: Store contacts in localStorage
-          console.log model
-          localStorage.setItem("contactsLoaded", true)
-
-          #2
-          $(".modal-backdrop").remove()
-
-          #3
-          @model.set page: "contacts"
+              i++
+              if i == ii
+                @model.save(
+                  page: "contacts"
+                ,
+                  success: =>
+                    localStorage.setItem("contactsLoaded", true)
+                    $(".modal-backdrop").remove()
+                )
+          )
 
   contactError: (err) ->
     # TODO
@@ -120,7 +118,6 @@ class app.LoginView extends Backbone.View
       filter: ""
       multiple: true
 
-    # TODO: make generic function that reads all contact data
     if navigator.contacts
       navigator.contacts.find(["phoneNumbers", "displayName", "nickname"], @contactSuccess, @contactError, options)
     else 

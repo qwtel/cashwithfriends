@@ -1,0 +1,425 @@
+@pearlique: #FCEFE6;
+@bege: #F3CA9B;
+@babypink: #F0D6CA;
+@nilufar: #ED8674;
+@iwonder: #AFDB86;
+
+@white: @pearlique;
+@red: @nilufar;
+@green: darken(@iwonder, 5%);
+
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    height:100%;
+    width:100%;
+    margin:0px;
+    padding:0px;
+    background-color: @white;
+    overflow: hidden;
+}
+
+a {
+  cursor: pointer;
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-top: 70px;
+  overflow: hidden;
+}
+
+.page-left {
+  -webkit-transform: translateX(-100%);
+  -moz-transform: translateX(-100%);
+  -ms-transform: translateX(-100%);
+  -o-transform: translateX(-100%);
+  transform: translateX(-100%);
+}
+
+.page-middle {
+  -webkit-transform: translateX(0%);
+  -moz-transform: translateX(0%);
+  -ms-transform: translateX(0%);
+  -o-transform: translateX(0%);
+  transform: translateX(0%);
+}
+
+.page-right {
+  -webkit-transform: translateX(100%);
+  -moz-transform: translateX(100%);
+  -ms-transform: translateX(100%);
+  -o-transform: translateX(100%);
+  transform: translateX(100%);
+}
+
+@media screen and (min-width:768px) {
+  .page {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    -o-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  #page-left {
+    width: 50%;
+    top:0;
+    left:0;
+  }
+
+  #page-right {
+    width: 50%;
+    top:0;
+    left:50%;
+  }
+}
+
+#page-right {
+  background-color: shade(@white, 3%);
+}
+
+.list-group {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-bottom: 0;
+  padding-bottom: 50px;
+}
+
+.list-group-item {
+  color: @white;
+  border-radius: 0!important;
+  border: none;
+  height: 70px;
+  margin-bottom: 0;
+  padding: 0px;
+
+  .value {
+    box-sizing: border-box;
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    min-width: 25%;
+    padding: 10px;
+    color: @pearlique;
+    text-align: right;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.1;
+  }
+
+  .media {
+    width: 75%;
+    margin-top: 0;
+    padding: 10px;
+
+    img.media-object {
+      width: 50px;
+      height: 50px;
+    }
+
+    .media-body {
+      overflow: hidden;
+    }
+
+    .media-heading {
+      color: @white;
+      font-size: 22px;
+      font-weight: 300;
+    }
+    .media-text {
+      font-size: 16px;
+    }
+  }
+}
+
+.list-group::-webkit-scrollbar { 
+    display: none; 
+}
+
+.navbar {
+  position: absolute;
+  border: none;
+  height: 70px;
+  overflow: hidden;
+
+  #search {
+    position: relative;
+    top: -5px;
+    outline: 0;
+    background: none;
+    border: none;
+    color: shade(@bege,30%);
+    font-size: 42px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-weight: bold;
+    width: 100%;
+  }
+}
+
+.red {
+  background-color: @red!important;
+  .value {
+    background-color: shade(@red,5%);
+  }
+  /*
+  &:hover {
+    background-color: shade(@red, 5%)!important;
+    .value {
+      background-color: shade(@red,10%);
+    }
+  }
+  */
+}
+
+.green {
+  background-color: @green!important;
+  .value {
+    background-color: shade(@green,5%);
+  }
+  /*
+  &:hover {
+    background-color: shade(@green, 5%)!important;
+    .value {
+      background-color: shade(@green,10%);
+    }
+  }
+  */
+}
+
+.zero {
+  background-color: @babypink!important;
+  .value {
+    background-color: shade(@babypink,5%);
+  }
+  .media-heading, .value {
+    color: rgba(0, 0, 0, 0.3);
+  }
+  /*
+  &:hover {
+    background-color: shade(@babypink, 5%)!important;
+    .value {
+      background-color: shade(@babypink, 10%);
+    }
+  }
+  */
+}
+
+.bege {
+  color: shade(@bege, 30%);
+  background-color: @bege!important;
+  .value {
+    background-color: shade(@bege,5%);
+  }
+
+  .media {
+    background-color: @bege;
+    .media-heading {
+      color: shade(@bege, 30%);
+    }
+  }
+}
+
+#search::-webkit-input-placeholder { /* WebKit browsers */
+  color: shade(@bege, 10%);
+}
+
+#search:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color: shade(@bege, 10%);
+}
+
+#search::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: shade(@bege, 10%);
+}
+
+#search:-ms-input-placeholder { /* Internet Explorer 10+ */
+  color: shade(@bege, 10%);
+}
+
+#transactions {
+  .arrow {
+	  position: relative; 
+    margin-top: 10px;
+    .media {
+      width: 100%;
+    }
+  }
+
+  .arrow.red:after, .arrow.green:before {
+    content: " "; 
+    display: block; 
+    width: 0; 
+    height: 0;
+    border-top: 35px solid transparent;           /* Go big on the size, and let overflow hide */
+    border-bottom: 35px solid transparent;
+    position: absolute;
+    top: 50%;
+    margin-top: -35px; 
+    z-index: 2; 
+  }
+
+  .arrow.red:after {
+    border-left: 25px solid @red;
+    left: 100%;
+  }
+
+  .arrow.green:before {
+    border-right: 25px solid @green;
+    right: 100%;
+  }
+
+  .arrow.red {
+    margin-right: 35px;
+  }
+
+  /*
+  .arrow.red:hover:after {
+    border-left-color: shade(@red, 5%);
+  }
+  */
+
+  .arrow.green {
+    margin-left: 35px;
+  }
+
+  /*
+  .arrow.green:hover:before {
+    border-right-color: shade(@green, 5%);
+  }
+  */
+}
+
+.arrow-big {
+  width: 100%;
+  min-height: 500px;
+  max-width: 400px;
+  margin: auto;
+  position: relative;
+}
+
+.arrow-big.green {
+  top: 90px;
+}
+
+.arrow-big.red {
+  margin-bottom: 90px;
+}
+
+.arrow-big.red:after, .arrow-big.green:before {
+    content: " "; 
+    display: block; 
+    width: 0; 
+    height: 0;
+    border-left: 200px solid transparent;           /* Go big on the size, and let overflow hide */
+    border-right: 200px solid transparent;
+    position: absolute;
+    left: 50%;
+    margin-left: -200px; 
+}
+
+.arrow-big.green:before {
+    border-bottom: 70px solid @green;
+    bottom: 100%;
+}
+
+.arrow-big.red:after {
+    border-top: 70px solid @red;
+    top: 100%;
+}
+
+.arrow-big-content {
+  position: absolute;
+  left: 0;
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+  color: @white;
+   
+  h4 {
+    color: @white;
+  }
+
+  .arrow-input {
+    outline: 0;
+    background: none;
+    border: none;
+    margin: 0;
+    color: @white;
+    max-width: 480px;
+    box-sizing: border-box;
+    text-align: center;
+    width: 100%;
+  }
+
+  .input-value {
+    font-size: 100px;
+    font-weight: bold;
+  }
+
+  .input-reason {
+    font-size: 24px;
+    padding: 10px;
+  }
+}
+
+.green .arrow-big-content {
+  top: 0;
+}
+
+.red .arrow-big-content {
+  bottom: 0;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+@asdf: rgba(0, 0, 0, 0.2);
+
+.arrow-input::-webkit-input-placeholder { /* WebKit browsers */
+  color: @asdf;
+}
+
+.arrow-input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color: @asdf;
+}
+
+.arrow-input::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: @asdf;
+}
+
+.arrow-input:-ms-input-placeholder { /* Internet Explorer 10+ */
+  color: @asdf;
+}
+
+.navbar-fixed-bottom {
+  height: 50px;
+}
+
+.stuff {
+  text-align: center;
+  padding: 10px;
+  font-size: 22px;
+  color: shade(@bege, 30%)!important;
+}

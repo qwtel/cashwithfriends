@@ -1,15 +1,14 @@
 class app.AppModel extends Backbone.Model
   defaults:
-    #id: null
-    #balance: 0
-    #currency: "€"
+    id: null
+    balance: 0
+    currency: "€"
+    contacts: []
+    #selected: new app.ContactCollection
+    #me: new app.ContactModel
     page: ""
-    showSearchField: false
     query: ""
-    contacts: new app.ContactCollection
-    selected: new app.ContactCollection
     numSelected: 0
-    me: new app.ContactModel
     "currency-select": "€"
     "balance-input": 0
     "promise-select": "+"
@@ -17,11 +16,11 @@ class app.AppModel extends Backbone.Model
     showNextButton: false
     showSearchField: false
 
-  urlRoot: app.location + "/contacts"
+  urlRoot: app.location + "/login"
 
   initialize: -> 
     @listenTo this, "change:page", @updateCollections
-    @get("selected").comparator = "name"
+    #@get("selected").comparator = "name"
 
     # TODO remove
     #app.selected = new app.ContactCollection
@@ -39,13 +38,22 @@ class app.AppModel extends Backbone.Model
       #app.transactions.credentials = @credentials
 
       #2 
-      me = @get("me")
-      me.set id: number
-      me.credentials = @credentials
-      me.fetch()
+      #me = @get("me")
+      #me.set id: number
+      #me.credentials = @credentials
+      #me.fetch()
 
       #3
-      @get("contacts").fetch()
+      @set("id", number)
+      @fetch()
+
+  parse: (t1, t2) ->
+    console.log(t1, t2)
+    super(t1, t2)
+
+  parseBeforeLocalSave: (t1, t2) ->
+    console.log(t1, t2)
+    super(t1, t2)
 
   resetInput: ->
     @set
@@ -54,13 +62,12 @@ class app.AppModel extends Backbone.Model
       "currency-select": @defaults["currency-select"]
       "reason-input": @defaults["reason-input"]
 
-  toJSON: ->
-    obj = super
-    _.each _.keys(obj), (key) ->
-      if obj[key] and not _.isNull(obj[key]) and _.isFunction(obj[key].toJSON)
-        obj[key] = obj[key].toJSON()
-    console.log obj
-    obj
+  #toJSON: ->
+  #  obj = super
+  #  _.each _.keys(obj), (key) ->
+  #    if obj[key] and not _.isNull(obj[key]) and _.isFunction(obj[key].toJSON)
+  #      obj[key] = obj[key].toJSON()
+  #  obj
 
   updateCollections: ->
     page = @get "page"
@@ -87,5 +94,12 @@ class app.AppModel extends Backbone.Model
           data:
             onlyActive: false
     ###
+
+  toViewModel: ->
+    model = @toJSON()
+    model.contacts = _.map model.contacts, (contact) =>
+      json = localStorage.getItem(app.location + "/contacts" + contact)
+      new app.ContactModel(JSON.parse(json)).toJSON()
+    model
 
 app.model = new app.AppModel

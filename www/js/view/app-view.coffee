@@ -8,17 +8,17 @@ class app.AppView extends Backbone.View
   initialize: ->
     @listenTo @model, 'reset', @render
     @listenTo @model, 'change:page', @renderPage
-    @listenTo @model, 'change:query', @renderPage
+    #@listenTo @model, 'change:query', @renderPage
     #@listenTo app.contacts, 'reset', @contactsReceived
     #@listenTo app.transactions, 'reset', @renderTransactions
-    @listenTo app.transactions, 'add', @addTransaction
+    #@listenTo app.transactions, 'add', @addTransaction
 
     @render()
 
   render: ->
     console.log "render app"
 
-    @$el.html(@template(@model.toJSON()))
+    @$el.html(@template(@model.toViewModel()))
     new app.HeaderView(model: @model, el: "#header")
     new app.FooterView(model: @model, el: "#footer")
 
@@ -52,14 +52,14 @@ class app.AppView extends Backbone.View
       when "login"
         view = new app.LoginView(model: @model)
         @$("#list").html(view.el)
-      when "contacts"
-        contacts = @filterContacts @model.get("contacts")
-        _.each contacts, @addContact, this
-      when "addressbook"
-        contacts = @filterContacts @model.get("contacts")
-        _.each contacts, (model) => @add(app.SelectableContactView)(model)
-      when "adjust"
-        @model.get("selected").each (model) => @add(app.AdjustableContactView)(model)
+      #when "contacts"
+      #  contacts = @filterContacts @model.get("contacts")
+      #  _.each contacts, @addContact, this
+      #when "addressbook"
+      #  contacts = @filterContacts @model.get("contacts")
+      #  _.each contacts, (model) => @add(app.SelectableContactView)(model)
+      #when "adjust"
+      #  @model.get("selected").each (model) => @add(app.AdjustableContactView)(model)
 
   filterContacts: (contacts) ->
     console.log("filter contacts", contacts)
